@@ -14,27 +14,30 @@ import type { CityTrend } from "../../api/client";
 // 20 distinct colors to support comparing up to 20 cities at once.
 // If the city list grows beyond this, either expand the palette further
 // or cap how many cities can be selected for comparison at once.
+// 20 distinct colors, chosen to stay readable on both light and dark
+// backgrounds (avoids very dark shades that disappear on dark mode, and
+// very light shades that wash out on light mode).
 const LINE_COLORS = [
-  "#2563eb", // blue
-  "#dc2626", // red
-  "#16a34a", // green
-  "#d97706", // amber
-  "#7c3aed", // violet
-  "#0891b2", // cyan
-  "#db2777", // pink
-  "#65a30d", // lime
-  "#ea580c", // orange
-  "#4f46e5", // indigo
-  "#0d9488", // teal
-  "#c026d3", // fuchsia
-  "#ca8a04", // yellow-dark
-  "#059669", // emerald
-  "#e11d48", // rose
-  "#7c2d12", // brown
-  "#1d4ed8", // blue-dark
-  "#9333ea", // purple
-  "#0369a1", // sky-dark
-  "#4d7c0f", // olive
+  "#3b82f6", // blue
+  "#ef4444", // red
+  "#22c55e", // green
+  "#f59e0b", // amber
+  "#a78bfa", // violet
+  "#06b6d4", // cyan
+  "#ec4899", // pink
+  "#84cc16", // lime
+  "#fb923c", // orange
+  "#818cf8", // indigo
+  "#2dd4bf", // teal
+  "#e879f9", // fuchsia
+  "#eab308", // yellow
+  "#34d399", // emerald
+  "#fb7185", // rose
+  "#d97706", // brown-ish orange
+  "#60a5fa", // sky
+  "#c084fc", // purple
+  "#38bdf8", // sky-light
+  "#a3e635", // olive-light
 ];
 
 type ComparisonChartProps = {
