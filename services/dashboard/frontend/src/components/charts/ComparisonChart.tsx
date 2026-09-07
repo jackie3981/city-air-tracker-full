@@ -1,4 +1,4 @@
-// src/components/ComparisonChart.tsx
+// src/components/charts/ComparisonChart.tsx
 import {
   LineChart,
   Line,
@@ -11,10 +11,38 @@ import {
 } from "recharts";
 import type { CityTrend } from "../../api/client";
 
-const LINE_COLORS = ["#2563eb", "#dc2626", "#16a34a", "#d97706", "#7c3aed"];
+// 20 distinct colors to support comparing up to 20 cities at once.
+// If the city list grows beyond this, either expand the palette further
+// or cap how many cities can be selected for comparison at once.
+const LINE_COLORS = [
+  "#2563eb", // blue
+  "#dc2626", // red
+  "#16a34a", // green
+  "#d97706", // amber
+  "#7c3aed", // violet
+  "#0891b2", // cyan
+  "#db2777", // pink
+  "#65a30d", // lime
+  "#ea580c", // orange
+  "#4f46e5", // indigo
+  "#0d9488", // teal
+  "#c026d3", // fuchsia
+  "#ca8a04", // yellow-dark
+  "#059669", // emerald
+  "#e11d48", // rose
+  "#7c2d12", // brown
+  "#1d4ed8", // blue-dark
+  "#9333ea", // purple
+  "#0369a1", // sky-dark
+  "#4d7c0f", // olive
+];
 
 type ComparisonChartProps = {
   cities: CityTrend[];
+  /** Full, stable list of city ids (e.g. from the city selector), used to
+   * assign each city a fixed color that doesn't shift when the selection
+   * changes. Colors cycle if there are more cities than LINE_COLORS. */
+  allCityIds: string[];
 };
 
 function mergeByTime(cities: CityTrend[]) {
@@ -33,7 +61,13 @@ function mergeByTime(cities: CityTrend[]) {
   );
 }
 
-export default function ComparisonChart({ cities }: ComparisonChartProps) {
+function colorForCity(cityId: string, allCityIds: string[]): string {
+  const index = allCityIds.indexOf(cityId);
+  const safeIndex = index === -1 ? 0 : index;
+  return LINE_COLORS[safeIndex % LINE_COLORS.length];
+}
+
+export default function ComparisonChart({ cities, allCityIds }: ComparisonChartProps) {
   if (cities.length === 0) {
     return (
       <div className="border border-dashed border-gray-300 rounded-lg p-12 text-center text-sm text-gray-400">
@@ -54,12 +88,12 @@ export default function ComparisonChart({ cities }: ComparisonChartProps) {
           <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 12, fill: "#9ca3af" }} axisLine={{ stroke: "#e5e7eb" }} tickLine={false} />
           <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, borderColor: "#e5e7eb" }} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
-          {cities.map((city, i) => (
+          {cities.map((city) => (
             <Line
               key={city.id}
               type="monotone"
               dataKey={city.cityName}
-              stroke={LINE_COLORS[i % LINE_COLORS.length]}
+              stroke={colorForCity(city.id, allCityIds)}
               strokeWidth={2}
               dot={{ r: 3 }}
             />
